@@ -5,7 +5,9 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-void framebuffer_size_callback(GLFWwindow *window, int width, int height)
+void framebuffer_size_callback(GLFWwindow *window, int width, int height);
+void processInput(GLFWwindow *window);
+
 
 int main()
 {
@@ -43,6 +45,8 @@ int main()
 	// rendering loop
 	while (!glfwWindowShouldClose(window))
 	{
+		processInput(window);
+
 		// swap color buffer
 		glfwSwapBuffers(window);
 
@@ -58,4 +62,12 @@ int main()
 void framebuffer_size_callback(GLFWwindow *window, int width, int height)
 {
 	glViewport(0, 0, width, height);
+}
+
+void processInput(GLFWwindow *window)
+{
+	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+	{
+		glfwSetWindowShouldClose(window, true);
+	}
 }
