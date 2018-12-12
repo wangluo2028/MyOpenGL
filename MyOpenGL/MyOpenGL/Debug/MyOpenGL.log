@@ -1,1 +1,5 @@
-﻿
+﻿  stdafx.cpp
+  MyOpenGL.cpp
+LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
+  MyOpenGL.vcxproj -> D:\Opengl\Test\MyOpenGL\MyOpenGL\Debug\MyOpenGL.exe
+  MyOpenGL.vcxproj -> D:\Opengl\Test\MyOpenGL\MyOpenGL\Debug\MyOpenGL.pdb (Full PDB)
