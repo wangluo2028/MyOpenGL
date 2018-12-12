@@ -5,6 +5,8 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+void framebuffer_size_callback(GLFWwindow *window, int width, int height)
+
 int main()
 {
 	glfwInit();
@@ -36,6 +38,24 @@ int main()
 
 	glViewport(0, 0, 800, 600);
 
+	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+
+	// rendering loop
+	while (!glfwWindowShouldClose(window))
+	{
+		// swap color buffer
+		glfwSwapBuffers(window);
+
+		// check event: keyboard input mouse move, update window status, then invoke the call back
+		glfwPollEvents();
+	}
+
+	glfwTerminate();
+
     return 0;
 }
 
+void framebuffer_size_callback(GLFWwindow *window, int width, int height)
+{
+	glViewport(0, 0, width, height);
+}
