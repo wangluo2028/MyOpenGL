@@ -8,6 +8,18 @@
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 void processInput(GLFWwindow *window);
 
+//const char *vertexShaderSource = "#version 330 core\n"
+//"layout (location = 0) in vec3 aPos;\n"
+//"void main()\n"
+//"{\n"
+//"   gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
+//"}\0";
+//const char *fragmentShaderSource = "#version 330 core\n"
+//"out vec4 FragColor;\n"
+//"void main()\n"
+//"{\n"
+//"   FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
+//"}\n\0";
 
 int main()
 {
@@ -42,31 +54,12 @@ int main()
 
 	glViewport(0, 0, 800, 600);
 
-	// draw triangles
-	float vertices[] = {
-		-0.5f, -0.5f, 0.0f,
-		0.5f, -0.5f, 0.0f,
-		0.0f, 0.5f, 0.0f
-	};
-
-	// Vertex Buffer Objects
-	unsigned int VBO = 0;
-	glGenBuffers(1, &VBO);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-	//glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-	//glEnableVertexAttribArray(0);
-
-	
-
-
 	std::ifstream vertexShaderReader("vertex.vs");
 	std::string vertexShaderContent((std::istreambuf_iterator<char>(vertexShaderReader)),
 		std::istreambuf_iterator<char>());
 	vertexShaderReader.close();
 
-	char *vertexShaderSource = &vertexShaderContent[0];
+	const char *vertexShaderSource = vertexShaderContent.c_str();
 
 	unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
 	glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
@@ -82,11 +75,11 @@ int main()
 	}
 
 	std::ifstream fragmentShaderReader("frag.fs");
-	std::string fragmentShaderContent((std::istreambuf_iterator<char>(vertexShaderReader)),
+	std::string fragmentShaderContent((std::istreambuf_iterator<char>(fragmentShaderReader)),
 		std::istreambuf_iterator<char>());
 	fragmentShaderReader.close();
 
-	char *fragmentShaderSource = &fragmentShaderContent[0];
+	const char *fragmentShaderSource = fragmentShaderContent.c_str();
 	unsigned int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 	glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
 	glCompileShader(fragmentShader);
@@ -108,30 +101,49 @@ int main()
 		std::cout << "ERROR::SHADER_PROGRAM::LINK_FAILED\n" << infoLog << std::endl;
 	}
 
-	//glDeleteShader(vertexShader);
-	//glDeleteShader(fragmentShader);
+	glDeleteShader(vertexShader);
+	glDeleteShader(fragmentShader);
 
-	// Vertex Array Object
+
+	// draw triangles
+	float vertices[] = {
+		// first triangle
+		0.5f, 0.5f, 0.0f,
+		0.5f, -0.5f, 0.0f,
+		-0.5f, 0.5f, 0.0f,
+
+		// second triangle
+		-0.5f, 0.5f, 0.0f,
+		-0.5f, -0.5f, 0.0f,
+		0.5f, -0.5f, 0.0f
+	};
+
+	// Vertex Buffer Objects
+	unsigned int VBO = 0;
+	glGenBuffers(1, &VBO);
+
 	unsigned int VAO = 0;
 	glGenVertexArrays(1, &VAO);
 	glBindVertexArray(VAO);
-	glEnableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-	
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(0);
 
 	// rendering loop
 	while (!glfwWindowShouldClose(window))
 	{
+		processInput(window);
+
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		glUseProgram(shaderProgram);
 		glBindVertexArray(VAO);
-		glDrawArrays(GL_TRIANGLES, 0, 3);
 
-		processInput(window);
+		glDrawArrays(GL_TRIANGLES, 0, 6);
 
 		// swap color buffer
 		glfwSwapBuffers(window);
@@ -139,6 +151,9 @@ int main()
 		// check event: keyboard input mouse move, update window status, then invoke the call back
 		glfwPollEvents();
 	}
+
+	glDeleteVertexArrays(1, &VAO);
+	glDeleteBuffers(1, &VBO);
 
 	glfwTerminate();
 
