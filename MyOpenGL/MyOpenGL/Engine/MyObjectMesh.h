@@ -5,22 +5,31 @@
 class UMyObjectMesh
 {
 public:
-	UMyObjectMesh(const std::vector<float> &InVertices);
+	UMyObjectMesh();
 	~UMyObjectMesh();
+
+	void CreateMesh(const std::vector<float> &InVertices, const std::vector<unsigned int> &InIndices);
 
 	void SetupShaderProgram(class FMyShaderProgram *InShaderProgram);
 
-	void GenVAOAndVBO();
+	void GenRenderBuffer();
 
 	unsigned int GetObjectID() const;
 
 	void Render();
 
 protected:
+	virtual void BeginPlay();
+
+protected:
 	std::vector<float> Vertices;
 
-	unsigned int VAO;
-	unsigned int VBO;
+	std::vector<unsigned int> Indices;
+
+	unsigned int VAO; // vertex array object
+	unsigned int VBO; // vertex buffer object
+
+	unsigned int EBO; // element buffer object
 
 	class FMyShaderProgram *MyShaderProgram;
 };

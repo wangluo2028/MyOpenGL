@@ -65,7 +65,7 @@ bool FMyOpenGLEngine::gladInitialization()
 void FMyOpenGLEngine::RenderLoop()
 {
 	// wire frame mode
-	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 	while (!glfwWindowShouldClose(window))
 	{
