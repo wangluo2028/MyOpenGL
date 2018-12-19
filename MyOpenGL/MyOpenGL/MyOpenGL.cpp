@@ -105,17 +105,15 @@ int main()
 	glDeleteShader(fragmentShader);
 
 
-	// draw triangles
 	float vertices[] = {
-		// first triangle
 		0.5f, 0.5f, 0.0f,
 		0.5f, -0.5f, 0.0f,
 		-0.5f, 0.5f, 0.0f,
-
-		// second triangle
-		-0.5f, 0.5f, 0.0f,
-		-0.5f, -0.5f, 0.0f,
-		0.5f, -0.5f, 0.0f
+		-0.5f, -0.5f, 0.0f
+	};
+	unsigned int indices[] = {
+		0, 1, 2,
+		1, 2, 3
 	};
 
 	// Vertex Buffer Objects
@@ -131,6 +129,15 @@ int main()
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
 
+	// element buffer object
+	unsigned int EBO = 0;
+	glGenBuffers(1, &EBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+	// wire frame mode
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
 	// rendering loop
 	while (!glfwWindowShouldClose(window))
 	{
@@ -141,9 +148,12 @@ int main()
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		glUseProgram(shaderProgram);
-		glBindVertexArray(VAO);
 
-		glDrawArrays(GL_TRIANGLES, 0, 6);
+		glBindVertexArray(VAO);
+		//glDrawArrays(GL_TRIANGLES, 0, 3);
+
+		//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 		// swap color buffer
 		glfwSwapBuffers(window);
@@ -154,6 +164,7 @@ int main()
 
 	glDeleteVertexArrays(1, &VAO);
 	glDeleteBuffers(1, &VBO);
+	glDeleteBuffers(1, &EBO);
 
 	glfwTerminate();
 
