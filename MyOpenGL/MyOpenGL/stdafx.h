@@ -10,5 +10,9 @@
 #include <tchar.h>
 #include <iostream>
 #include <fstream>
+#include <vector>
+
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
 
 // TODO: reference additional headers your program requires here

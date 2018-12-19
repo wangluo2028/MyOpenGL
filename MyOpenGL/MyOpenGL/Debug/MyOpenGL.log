@@ -1,3 +1,5 @@
-﻿  MyOpenGL.cpp
+﻿  MyOpenGLEngine.cpp
+d:\opengl\test\myopengl\myopengl\myopengl\engine\myopenglengine.h(31): warning C4099: 'GLFWwindow': type name first seen using 'struct' now seen using 'class'
+  d:\opengl\test\myopengl\glfw-3.2.1\include\glfw\glfw3.h(789): note: see declaration of 'GLFWwindow'
   MyOpenGL.vcxproj -> D:\Opengl\Test\MyOpenGL\MyOpenGL\Debug\MyOpenGL.exe
   MyOpenGL.vcxproj -> D:\Opengl\Test\MyOpenGL\MyOpenGL\Debug\MyOpenGL.pdb (Full PDB)

@@ -157,6 +157,10 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\MyOpenGLEngine.h" />
+    <ClInclude Include="Engine\MyShaderProgram.h" />
+    <ClInclude Include="Engine\MyObjectMesh.h" />
+    <ClInclude Include="Engine\MyWorld.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
@@ -167,7 +171,12 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="HelloTriangle1_3.cpp" />
+    <ClCompile Include="Engine\MyObjectMesh.cpp" />
     <ClCompile Include="MyOpenGL.cpp" />
+    <ClCompile Include="Engine\MyOpenGLEngine.cpp" />
+    <ClCompile Include="Engine\MyShaderProgram.cpp" />
+    <ClCompile Include="Engine\MyWorld.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -176,8 +185,9 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="frag.fs" />
-    <None Include="vertex.vs" />
+    <None Include="GLSL\frag.fs" />
+    <None Include="GLSL\vertex.vs" />
+    <None Include="GLSL\yellowfrag.fs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
