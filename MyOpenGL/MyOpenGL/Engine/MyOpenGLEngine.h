@@ -27,6 +27,8 @@ protected:
 
 	static void FrameSizeCallBack(GLFWwindow *window, int width, int height);
 
+	void ProcessInput(GLFWwindow *window);
+
 protected:
 	class GLFWwindow *window;
 

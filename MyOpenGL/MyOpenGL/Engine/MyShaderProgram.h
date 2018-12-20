@@ -7,6 +7,8 @@ public:
 
 	~FMyShaderProgram();
 
+	unsigned int GetID();
+
 	bool SetupVertexShader(const char* vertexShaderFile);
 
 	bool SetupFragmentShader(const char* fragmentShaderFile);

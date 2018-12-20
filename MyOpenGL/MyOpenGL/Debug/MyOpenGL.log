@@ -1,5 +1,6 @@
-﻿  MyOpenGLEngine.cpp
-d:\opengl\test\myopengl\myopengl\myopengl\engine\myopenglengine.h(31): warning C4099: 'GLFWwindow': type name first seen using 'struct' now seen using 'class'
+﻿  MyObjectMesh.cpp
+d:\opengl\test\myopengl\myopengl\myopengl\engine\myopenglengine.h(33): warning C4099: 'GLFWwindow': type name first seen using 'struct' now seen using 'class'
   d:\opengl\test\myopengl\glfw-3.2.1\include\glfw\glfw3.h(789): note: see declaration of 'GLFWwindow'
+d:\opengl\test\myopengl\myopengl\myopengl\engine\myobjectmesh.cpp(101): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
   MyOpenGL.vcxproj -> D:\Opengl\Test\MyOpenGL\MyOpenGL\Debug\MyOpenGL.exe
   MyOpenGL.vcxproj -> D:\Opengl\Test\MyOpenGL\MyOpenGL\Debug\MyOpenGL.pdb (Full PDB)

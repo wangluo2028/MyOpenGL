@@ -21,7 +21,7 @@ void processInput(GLFWwindow *window);
 //"   FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
 //"}\n\0";
 
-int test_main()
+int testmain()
 {
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -54,6 +54,8 @@ int test_main()
 
 	//glViewport(0, 0, 800, 600);
 
+	int nrAttributes = 0;
+	glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &nrAttributes);
 
 	// compile vertext shader
 	std::ifstream vertexShaderReader("vertex.vs");

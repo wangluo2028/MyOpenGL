@@ -17,6 +17,11 @@ FMyShaderProgram::~FMyShaderProgram()
 	}	
 }
 
+unsigned int FMyShaderProgram::GetID()
+{
+	return shaderProgram;
+}
+
 bool FMyShaderProgram::SetupVertexShader(const char* vertexShaderFile)
 {
 	std::string vertexShaderSource = ReadStringFromFile(vertexShaderFile);

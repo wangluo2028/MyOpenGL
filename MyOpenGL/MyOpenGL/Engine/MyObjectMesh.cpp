@@ -21,11 +21,14 @@ UMyObjectMesh::~UMyObjectMesh()
 	glDeleteBuffers(1, &EBO);
 }
 
-void UMyObjectMesh::CreateMesh(const std::vector<float> &InVertices, const std::vector<unsigned int> &InIndices)
+void UMyObjectMesh::CreateMesh(const std::vector<float> &InVertices, const std::vector<float> &InVertexColors,
+	const std::vector<unsigned int> &InIndices)
 {
 	Vertices = InVertices;
 
 	Indices = InIndices;
+
+	VertexColors = InVertexColors;
 
 	VAO = 0;
 	VBO = 0;
@@ -50,14 +53,40 @@ void UMyObjectMesh::GenRenderBuffer()
 	glBindVertexArray(VAO);
 
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, Vertices.size() * sizeof(float), Vertices.data(), GL_STATIC_DRAW);
 
-	glGenBuffers(1, &EBO);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, Indices.size() * sizeof(unsigned int), Indices.data(), GL_STATIC_DRAW);
+	std::vector<float> VertexDatas;
+	size_t vertexCnt = Vertices.size() / 3;
+	for (size_t i = 0; i < vertexCnt; ++i)
+	{
+		VertexDatas.push_back(Vertices[3*i]);
+		VertexDatas.push_back(Vertices[3 * i + 1]);
+		VertexDatas.push_back(Vertices[3 * i + 2]);
 
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), 0);
+		if (!VertexColors.empty())
+		{
+			VertexDatas.push_back(VertexColors[3 * i]);
+			VertexDatas.push_back(VertexColors[3 * i + 1]);
+			VertexDatas.push_back(VertexColors[3 * i + 2]);
+		}
+	}
+
+	glBufferData(GL_ARRAY_BUFFER, VertexDatas.size() * sizeof(float), VertexDatas.data(), GL_STATIC_DRAW);
+
+	if (!Indices.empty())
+	{
+		glGenBuffers(1, &EBO);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, Indices.size() * sizeof(unsigned int), Indices.data(), GL_STATIC_DRAW);
+	}
+	
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), 0);
 	glEnableVertexAttribArray(0);
+
+	if (!VertexColors.empty())
+	{
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+		glEnableVertexAttribArray(1);
+	}
 }
 
 unsigned int UMyObjectMesh::GetObjectID() const
@@ -69,11 +98,26 @@ void UMyObjectMesh::Render()
 {
 	if (MyShaderProgram)
 	{
+		float greenColor = 0.5f * sin(glfwGetTime()) + 0.5f;
+
 		MyShaderProgram->UseShaderProgram();
+
+		//int ColorInFragLocation = glGetUniformLocation(MyShaderProgram->GetID(), "ColorInFragment");
+		//glUniform4f(ColorInFragLocation, .0f, greenColor, .0f, 1.0f);
+		//glProgramUniform4f(MyShaderProgram->GetID(), ColorInFragLocation, 1.0f, 0.0f, 0.0f, 1.0f);
 	}
+
 	glBindVertexArray(VAO);
-	//glDrawArrays(GL_TRIANGLES, 0, (int)Vertices.size());
-	glDrawElements(GL_TRIANGLES, (int)Indices.size(), GL_UNSIGNED_INT, 0);
+
+	if (Indices.empty())
+	{
+		glDrawArrays(GL_TRIANGLES, 0, (int)Vertices.size());
+	}
+	else
+	{
+		glDrawElements(GL_TRIANGLES, (int)Indices.size(), GL_UNSIGNED_INT, 0);
+	}
+	
 }
 
 void UMyObjectMesh::BeginPlay()

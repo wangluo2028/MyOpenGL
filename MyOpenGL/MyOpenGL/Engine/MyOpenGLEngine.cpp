@@ -65,10 +65,12 @@ bool FMyOpenGLEngine::gladInitialization()
 void FMyOpenGLEngine::RenderLoop()
 {
 	// wire frame mode
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 	while (!glfwWindowShouldClose(window))
 	{
+		ProcessInput(window);
+
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
 
@@ -95,4 +97,12 @@ void FMyOpenGLEngine::Terminate()
 void FMyOpenGLEngine::FrameSizeCallBack(GLFWwindow *window, int width, int height)
 {
 	glViewport(0, 0, width, height);
+}
+
+void FMyOpenGLEngine::ProcessInput(GLFWwindow *window)
+{
+	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+	{
+		glfwSetWindowShouldClose(window, true);
+	}
 }
