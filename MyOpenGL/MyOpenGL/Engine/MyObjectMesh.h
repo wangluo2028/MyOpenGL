@@ -1,6 +1,7 @@
 #pragma once
 
 #include "MyShaderProgram.h"
+#include "Math/ProcMeshSection.h"
 
 class UMyObjectMesh
 {
@@ -8,14 +9,15 @@ public:
 	UMyObjectMesh();
 	~UMyObjectMesh();
 
-	void CreateMesh(const std::vector<float> &InVertices, const std::vector<float> &InVertexColors,
+	void CreateMeshSection(unsigned int Index, const std::vector<float> &InVertices, const std::vector<float> &InVertexColors,
+		const std::vector<float> &InUVs,
 		const std::vector<unsigned int> &InIndices);
 
-	void SetupShaderProgram(class FMyShaderProgram *InShaderProgram);
+	void SetupShaderProgram(class UMaterial *InShaderProgram);
+
+	void SetupTexture();
 
 	void GenRenderBuffer();
-
-	unsigned int GetObjectID() const;
 
 	void Render();
 
@@ -23,17 +25,13 @@ protected:
 	virtual void BeginPlay();
 
 protected:
-	std::vector<float> Vertices;
-
-	std::vector<unsigned int> Indices;
-
-	std::vector<float> VertexColors;
+	std::vector<FProcMeshSection> ProcMeshSections;
 
 	unsigned int VAO; // vertex array object
 	unsigned int VBO; // vertex buffer object
 
 	unsigned int EBO; // element buffer object
 
-	class FMyShaderProgram *MyShaderProgram;
+	class UMaterial *MyShaderProgram;
 };
 

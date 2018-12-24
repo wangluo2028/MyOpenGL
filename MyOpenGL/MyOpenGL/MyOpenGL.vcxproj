@@ -157,12 +157,19 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\Math\Color.h" />
     <ClInclude Include="Engine\MyOpenGLEngine.h" />
     <ClInclude Include="Engine\MyShaderProgram.h" />
     <ClInclude Include="Engine\MyObjectMesh.h" />
     <ClInclude Include="Engine\MyWorld.h" />
+    <ClInclude Include="Engine\Math\ProcMeshSection.h" />
+    <ClInclude Include="Engine\Math\ProcMeshVertex.h" />
+    <ClInclude Include="Engine\Texture\stb_image.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="Engine\Math\Vector3D.h" />
+    <ClInclude Include="Engine\Math\Vector2D.h" />
+    <ClInclude Include="Engine\Texture\Texture2D.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\glad\src\glad.c">
@@ -171,23 +178,35 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Engine\Math\Color.cpp" />
+    <ClCompile Include="Engine\Texture\stb_image.cpp" />
     <ClCompile Include="HelloTriangle1_3.cpp" />
     <ClCompile Include="Engine\MyObjectMesh.cpp" />
     <ClCompile Include="MyOpenGL.cpp" />
     <ClCompile Include="Engine\MyOpenGLEngine.cpp" />
     <ClCompile Include="Engine\MyShaderProgram.cpp" />
     <ClCompile Include="Engine\MyWorld.cpp" />
+    <ClCompile Include="Engine\Math\ProcMeshSection.cpp" />
+    <ClCompile Include="Engine\Math\ProcMeshVertex.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Engine\Math\Vector3D.cpp" />
+    <ClCompile Include="Engine\Math\Vector2D.cpp" />
+    <ClCompile Include="Engine\Texture\Texture2D.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="GLSL\frag.fs" />
     <None Include="GLSL\vertex.vs" />
     <None Include="GLSL\yellowfrag.fs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Resource\awesomeface.png" />
+    <Image Include="Resource\container.jpg" />
+    <Image Include="Resource\wall.jpg" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

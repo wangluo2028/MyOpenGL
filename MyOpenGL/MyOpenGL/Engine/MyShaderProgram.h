@@ -1,11 +1,13 @@
 #pragma once
 
-class FMyShaderProgram
+#include "Texture/Texture2D.h"
+
+class UMaterial
 {
 public:
-	FMyShaderProgram();
+	UMaterial();
 
-	~FMyShaderProgram();
+	~UMaterial();
 
 	unsigned int GetID();
 
@@ -17,6 +19,8 @@ public:
 
 	void UseShaderProgram();
 
+	void SetTexture(size_t Index, UTexture2D *InTexture);
+
 protected:
 	std::string ReadStringFromFile(const char *FilePath);
 
@@ -26,5 +30,7 @@ protected:
 	unsigned int fragmentShader;
 
 	unsigned int shaderProgram;
+
+	std::vector<UTexture2D*> Textures;
 };
 

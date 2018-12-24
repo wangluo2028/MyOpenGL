@@ -2,14 +2,14 @@
 #include "MyShaderProgram.h"
 
 
-FMyShaderProgram::FMyShaderProgram()
+UMaterial::UMaterial()
 {
 	vertexShader = 0;
 	fragmentShader = 0;
 	shaderProgram = 0;
 }
 
-FMyShaderProgram::~FMyShaderProgram()
+UMaterial::~UMaterial()
 {
 	if (glIsProgram(shaderProgram))
 	{
@@ -17,12 +17,12 @@ FMyShaderProgram::~FMyShaderProgram()
 	}	
 }
 
-unsigned int FMyShaderProgram::GetID()
+unsigned int UMaterial::GetID()
 {
 	return shaderProgram;
 }
 
-bool FMyShaderProgram::SetupVertexShader(const char* vertexShaderFile)
+bool UMaterial::SetupVertexShader(const char* vertexShaderFile)
 {
 	std::string vertexShaderSource = ReadStringFromFile(vertexShaderFile);
 	const char *vertexShaderSrc = vertexShaderSource.c_str();
@@ -47,7 +47,7 @@ bool FMyShaderProgram::SetupVertexShader(const char* vertexShaderFile)
 	return true;
 }
 
-bool FMyShaderProgram::SetupFragmentShader(const char* fragmentShaderFile)
+bool UMaterial::SetupFragmentShader(const char* fragmentShaderFile)
 {
 	std::string fragmentShaderSource = ReadStringFromFile(fragmentShaderFile);
 	const char *fragmentShaderSrc = fragmentShaderSource.c_str();
@@ -72,7 +72,7 @@ bool FMyShaderProgram::SetupFragmentShader(const char* fragmentShaderFile)
 	return true;
 }
 
-bool FMyShaderProgram::SetupShaderProgram()
+bool UMaterial::SetupShaderProgram()
 {
 	shaderProgram = glCreateProgram();
 	glAttachShader(shaderProgram, vertexShader);
@@ -97,12 +97,33 @@ bool FMyShaderProgram::SetupShaderProgram()
 	return true;
 }
 
-void FMyShaderProgram::UseShaderProgram()
+void UMaterial::UseShaderProgram()
 {
 	glUseProgram(shaderProgram);
+
+	size_t TextureCnt = Textures.size();
+	for (size_t Index = 0; Index < TextureCnt; ++Index)
+	{
+		glActiveTexture(GL_TEXTURE0 + Index);
+		Textures[Index]->UseTexture();
+
+		std::string TextureName("MyTexture");
+		TextureName += std::to_string(Index);
+		glUniform1i(glGetUniformLocation(shaderProgram, TextureName.c_str()), Index);
+	}
 }
 
-std::string FMyShaderProgram::ReadStringFromFile(const char *FilePath)
+void UMaterial::SetTexture(size_t Index, UTexture2D *InTexture)
+{
+	if ((Index + 1) > Textures.size())
+	{
+		Textures.resize(Index + 1);
+	}
+	
+	Textures[Index] = InTexture;
+}
+
+std::string UMaterial::ReadStringFromFile(const char *FilePath)
 {
 	std::ifstream FileReader(FilePath);
 	std::string FileContent((std::istreambuf_iterator<char>(FileReader)), std::istreambuf_iterator<char>());

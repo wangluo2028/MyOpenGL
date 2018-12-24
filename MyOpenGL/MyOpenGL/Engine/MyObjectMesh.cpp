@@ -21,14 +21,39 @@ UMyObjectMesh::~UMyObjectMesh()
 	glDeleteBuffers(1, &EBO);
 }
 
-void UMyObjectMesh::CreateMesh(const std::vector<float> &InVertices, const std::vector<float> &InVertexColors,
+void UMyObjectMesh::CreateMeshSection(unsigned int Index, const std::vector<float> &InVertices, const std::vector<float> &InVertexColors,
+	const std::vector<float> &InUVs,
 	const std::vector<unsigned int> &InIndices)
 {
-	Vertices = InVertices;
+	if ((Index + 1) > ProcMeshSections.size())
+	{
+		ProcMeshSections.resize(Index + 1);
+	}
 
-	Indices = InIndices;
+	FProcMeshSection &ProcMeshSection = ProcMeshSections[Index];
+	size_t VertexCnt = InVertices.size() / 3;
+	ProcMeshSection.ProcVertexBuffer.resize(VertexCnt);
+	size_t VertexColorCnt = InVertexColors.size() / 3;
+	size_t UVCnt = InUVs.size() / 2;
+	for (size_t VertexIndex = 0; VertexIndex < VertexCnt; ++VertexIndex)
+	{
+		FProcMeshVertex &ProcVertex = ProcMeshSection.ProcVertexBuffer[VertexIndex];
+		ProcVertex.Position = FVector(InVertices[3 * VertexIndex], InVertices[3 * VertexIndex + 1], 
+			InVertices[3 * VertexIndex + 2]);
 
-	VertexColors = InVertexColors;
+		if (VertexIndex < VertexColorCnt)
+		{
+			ProcVertex.Color = FColor(InVertexColors[3 * VertexIndex], InVertexColors[3 * VertexIndex + 1], 
+				InVertexColors[3 * VertexIndex + 2]);
+		}
+
+		if (VertexIndex < UVCnt)
+		{
+			ProcVertex.UV = FVector2D(InUVs[2 * VertexIndex], InUVs[2 * VertexIndex + 1]);
+		}
+	}
+
+	ProcMeshSection.ProcIndexBuffer = InIndices;
 
 	VAO = 0;
 	VBO = 0;
@@ -36,7 +61,7 @@ void UMyObjectMesh::CreateMesh(const std::vector<float> &InVertices, const std::
 	EBO = 0;
 }
 
-void UMyObjectMesh::SetupShaderProgram(class FMyShaderProgram *InShaderProgram)
+void UMyObjectMesh::SetupShaderProgram(class UMaterial *InShaderProgram)
 {
 	MyShaderProgram = InShaderProgram;
 
@@ -45,6 +70,13 @@ void UMyObjectMesh::SetupShaderProgram(class FMyShaderProgram *InShaderProgram)
 
 void UMyObjectMesh::GenRenderBuffer()
 {
+	if (ProcMeshSections.size() < 1)
+	{
+		return;
+	}
+
+	FProcMeshSection& ProcMeshSection = ProcMeshSections[0];
+
 	// vertex buffer object
 	glGenBuffers(1, &VBO);
 
@@ -54,68 +86,47 @@ void UMyObjectMesh::GenRenderBuffer()
 
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 
-	std::vector<float> VertexDatas;
-	size_t vertexCnt = Vertices.size() / 3;
-	for (size_t i = 0; i < vertexCnt; ++i)
-	{
-		VertexDatas.push_back(Vertices[3*i]);
-		VertexDatas.push_back(Vertices[3 * i + 1]);
-		VertexDatas.push_back(Vertices[3 * i + 2]);
+	glBufferData(GL_ARRAY_BUFFER, ProcMeshSection.ProcVertexBuffer.size() * sizeof(FProcMeshVertex), ProcMeshSection.ProcVertexBuffer.data(), GL_STATIC_DRAW);
 
-		if (!VertexColors.empty())
-		{
-			VertexDatas.push_back(VertexColors[3 * i]);
-			VertexDatas.push_back(VertexColors[3 * i + 1]);
-			VertexDatas.push_back(VertexColors[3 * i + 2]);
-		}
-	}
-
-	glBufferData(GL_ARRAY_BUFFER, VertexDatas.size() * sizeof(float), VertexDatas.data(), GL_STATIC_DRAW);
-
-	if (!Indices.empty())
+	if (!ProcMeshSection.ProcIndexBuffer.empty())
 	{
 		glGenBuffers(1, &EBO);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, Indices.size() * sizeof(unsigned int), Indices.data(), GL_STATIC_DRAW);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, ProcMeshSection.ProcIndexBuffer.size() * sizeof(unsigned int), ProcMeshSection.ProcIndexBuffer.data(), GL_STATIC_DRAW);
 	}
 	
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), 0);
+	glVertexAttribPointer(0, sizeof(FVector) / sizeof(float), GL_FLOAT, GL_FALSE, sizeof(FProcMeshVertex), 0);
 	glEnableVertexAttribArray(0);
 
-	if (!VertexColors.empty())
-	{
-		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
-		glEnableVertexAttribArray(1);
-	}
-}
+	glVertexAttribPointer(1, sizeof(FColor) / sizeof(float), GL_FLOAT, GL_FALSE, sizeof(FProcMeshVertex), (void*)(offsetof(FProcMeshVertex, Color)));
+	glEnableVertexAttribArray(1);
 
-unsigned int UMyObjectMesh::GetObjectID() const
-{
-	return VAO;
+	glVertexAttribPointer(2, sizeof(FVector2D) / sizeof(float), GL_FLOAT, GL_FALSE, sizeof(FProcMeshVertex), (void*)(offsetof(FProcMeshVertex, UV)));
+	glEnableVertexAttribArray(2);
 }
 
 void UMyObjectMesh::Render()
 {
 	if (MyShaderProgram)
 	{
-		float greenColor = 0.5f * sin(glfwGetTime()) + 0.5f;
-
 		MyShaderProgram->UseShaderProgram();
-
-		//int ColorInFragLocation = glGetUniformLocation(MyShaderProgram->GetID(), "ColorInFragment");
-		//glUniform4f(ColorInFragLocation, .0f, greenColor, .0f, 1.0f);
-		//glProgramUniform4f(MyShaderProgram->GetID(), ColorInFragLocation, 1.0f, 0.0f, 0.0f, 1.0f);
 	}
 
 	glBindVertexArray(VAO);
 
-	if (Indices.empty())
+	if (ProcMeshSections.size() < 1)
 	{
-		glDrawArrays(GL_TRIANGLES, 0, (int)Vertices.size());
+		return;
+	}
+
+	FProcMeshSection& ProcMeshSection = ProcMeshSections[0];
+	if (ProcMeshSection.ProcIndexBuffer.empty())
+	{
+		glDrawArrays(GL_TRIANGLES, 0, (int)ProcMeshSection.ProcVertexBuffer.size());
 	}
 	else
 	{
-		glDrawElements(GL_TRIANGLES, (int)Indices.size(), GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, (int)ProcMeshSection.ProcIndexBuffer.size(), GL_UNSIGNED_INT, 0);
 	}
 	
 }
