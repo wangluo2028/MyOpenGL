@@ -5,9 +5,11 @@ layout(location=2) in vec2 aTexCoord;
 out vec4 OutColor;
 out vec2 OutTexCoord;
 
+uniform mat4 ObjectTransform;
+
 void main()
 {
-	gl_Position = vec4(aPos, 1.0);
+	gl_Position = ObjectTransform * vec4(aPos, 1.0);
 	OutColor = vec4(aColor, 1.0);
 	OutTexCoord = aTexCoord;
 }

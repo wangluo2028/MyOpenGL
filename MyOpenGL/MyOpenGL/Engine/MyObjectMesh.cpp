@@ -8,6 +8,11 @@ UMyObjectMesh::UMyObjectMesh()
 	VBO = 0;
 
 	EBO = 0;
+
+	Transform2World = glm::identity<glm::mat4>();
+	/*Transform2World = glm::rotate(Transform2World, glm::radians(90.0f), glm::vec3(0, 0, 1.0f));
+	Transform2World = glm::scale(Transform2World, glm::vec3(0.5f, 0.5f, 0.0f));*/
+	//Transform2World = glm::translate(Transform2World, glm::vec3(0.5f, 0.5f, 0.0f));
 }
 
 UMyObjectMesh::~UMyObjectMesh()
@@ -68,6 +73,11 @@ void UMyObjectMesh::SetupShaderProgram(class UMaterial *InShaderProgram)
 	BeginPlay();
 }
 
+void UMyObjectMesh::SetTransform(const glm::mat4 &InTransform)
+{
+	Transform2World = InTransform;
+}
+
 void UMyObjectMesh::GenRenderBuffer()
 {
 	if (ProcMeshSections.size() < 1)
@@ -111,6 +121,13 @@ void UMyObjectMesh::Render()
 	{
 		MyShaderProgram->UseShaderProgram();
 	}
+
+	glm::mat4 tmpTrans = glm::identity<glm::mat4>();
+	Transform2World = tmpTrans;
+	Transform2World = glm::translate(Transform2World, glm::vec3(0.5f, -0.5f, 0.0f));
+	Transform2World = glm::rotate(Transform2World, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
+	
+	glUniformMatrix4fv(glGetUniformLocation(MyShaderProgram->GetID(), "ObjectTransform"), 1, GL_FALSE, glm::value_ptr(Transform2World));
 
 	glBindVertexArray(VAO);
 

@@ -15,7 +15,7 @@ public:
 
 	void SetupShaderProgram(class UMaterial *InShaderProgram);
 
-	void SetupTexture();
+	void SetTransform(const glm::mat4 &InTransform);
 
 	void GenRenderBuffer();
 
@@ -33,5 +33,7 @@ protected:
 	unsigned int EBO; // element buffer object
 
 	class UMaterial *MyShaderProgram;
+
+	glm::mat4 Transform2World;
 };
 
