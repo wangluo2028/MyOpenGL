@@ -170,6 +170,7 @@
     <ClInclude Include="Engine\Math\Vector3D.h" />
     <ClInclude Include="Engine\Math\Vector2D.h" />
     <ClInclude Include="Engine\Texture\Texture2D.h" />
+    <ClInclude Include="Engine\UCamera.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\glad\src\glad.c">
@@ -197,6 +198,7 @@
     <ClCompile Include="Engine\Math\Vector3D.cpp" />
     <ClCompile Include="Engine\Math\Vector2D.cpp" />
     <ClCompile Include="Engine\Texture\Texture2D.cpp" />
+    <ClCompile Include="Engine\UCamera.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="GLSL\frag.fs" />

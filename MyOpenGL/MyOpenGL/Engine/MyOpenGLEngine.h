@@ -29,7 +29,7 @@ protected:
 
 	void ProcessInput(GLFWwindow *window);
 
-protected:
+public:
 	class GLFWwindow *window;
 
 	static int windowWidth;

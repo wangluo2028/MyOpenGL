@@ -67,12 +67,14 @@ void FMyOpenGLEngine::RenderLoop()
 	// wire frame mode
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
+	glEnable(GL_DEPTH_TEST);
+
 	while (!glfwWindowShouldClose(window))
 	{
 		ProcessInput(window);
 
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		for (UMyObjectMesh *MyMesh : MyWorld->GetMeshesInWorld())
 		{
