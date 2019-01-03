@@ -57,7 +57,7 @@
     <ClInclude Include="Engine\Texture\Texture2D.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\UCamera.h">
+    <ClInclude Include="Engine\Camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -107,7 +107,7 @@
     <ClCompile Include="Engine\Texture\Texture2D.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\UCamera.cpp">
+    <ClCompile Include="Engine\Camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -115,6 +115,7 @@
     <None Include="GLSL\frag.fs" />
     <None Include="GLSL\vertex.vs" />
     <None Include="GLSL\yellowfrag.fs" />
+    <None Include="GLSL\WhiteFrag.fs" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Resource\wall.jpg">

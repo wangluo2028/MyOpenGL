@@ -4,6 +4,11 @@
 int FMyOpenGLEngine::windowWidth = 800;
 int FMyOpenGLEngine::windowHeight = 600;
 FMyOpenGLEngine FMyOpenGLEngine::MyEngine;
+UCamera FMyOpenGLEngine::MyCamera;
+float FMyOpenGLEngine::LastFrame = 0.0f;
+float FMyOpenGLEngine::DeltaTime = 0.0f;
+bool FMyOpenGLEngine::bFirstMouse = true;
+FVector2D FMyOpenGLEngine::LastMousePos;
 
 FMyOpenGLEngine::FMyOpenGLEngine()
 {
@@ -47,6 +52,8 @@ bool FMyOpenGLEngine::glfwCreateWindowContext()
 	glfwMakeContextCurrent(window);
 
 	glfwSetFramebufferSizeCallback(window, FMyOpenGLEngine::FrameSizeCallBack);
+	glfwSetCursorPosCallback(window, FMyOpenGLEngine::MouseMoveCallBack);
+	glfwSetScrollCallback(window, FMyOpenGLEngine::MouseScrollCallBack);
 
 	return true;
 }
@@ -71,6 +78,10 @@ void FMyOpenGLEngine::RenderLoop()
 
 	while (!glfwWindowShouldClose(window))
 	{
+		float CurrentFrame = glfwGetTime();
+		DeltaTime = CurrentFrame - LastFrame;
+		LastFrame = CurrentFrame;
+
 		ProcessInput(window);
 
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -107,4 +118,33 @@ void FMyOpenGLEngine::ProcessInput(GLFWwindow *window)
 	{
 		glfwSetWindowShouldClose(window, true);
 	}
+
+	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+		MyCamera.ProcessKeyboardInput(EFront, DeltaTime);
+	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+		MyCamera.ProcessKeyboardInput(EBack, DeltaTime);
+	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+		MyCamera.ProcessKeyboardInput(ELeft, DeltaTime);
+	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+		MyCamera.ProcessKeyboardInput(ERight, DeltaTime);
+}
+
+void FMyOpenGLEngine::MouseMoveCallBack(GLFWwindow *window, double XOffset, double YOffset)
+{
+	if (bFirstMouse)
+	{
+		LastMousePos = FVector2D(XOffset, YOffset);
+		bFirstMouse = false;
+	}
+
+	float DeltaX = XOffset - LastMousePos.X;
+	float DeltaY = YOffset - LastMousePos.Y;
+	LastMousePos = FVector2D(XOffset, YOffset);
+
+	MyCamera.ProcessMouseInput(DeltaX, DeltaY);
+}
+
+void FMyOpenGLEngine::MouseScrollCallBack(GLFWwindow *window, double XOffset, double YOffset)
+{
+	MyCamera.ProcessMouseScroll(YOffset);
 }

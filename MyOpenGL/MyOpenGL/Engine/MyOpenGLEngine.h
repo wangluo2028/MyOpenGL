@@ -1,6 +1,6 @@
 #pragma once
 
-
+#include "Camera.h"
 #include "MyWorld.h"
 
 class FMyOpenGLEngine
@@ -27,16 +27,26 @@ protected:
 
 	static void FrameSizeCallBack(GLFWwindow *window, int width, int height);
 
-	void ProcessInput(GLFWwindow *window);
+	static void ProcessInput(GLFWwindow *window);
+
+	static void MouseMoveCallBack(GLFWwindow *window, double XOffset, double YOffset);
+
+	static void MouseScrollCallBack(GLFWwindow *window, double XOffset, double YOffset);
 
 public:
-	class GLFWwindow *window;
+	struct GLFWwindow *window;
 
 	static int windowWidth;
 	static int windowHeight;
+	static float LastFrame;
+	static float DeltaTime;
+	static bool bFirstMouse;
+	static FVector2D LastMousePos;
 
 	UMyWorld *MyWorld;
 
 	static FMyOpenGLEngine MyEngine;
+
+	static UCamera MyCamera;
 };
 

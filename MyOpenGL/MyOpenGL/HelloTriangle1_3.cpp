@@ -130,21 +130,55 @@ int main()
 	
 	UMaterial MyShaderProgram2;
 	MyShaderProgram2.SetupVertexShader("GLSL/vertex.vs");
-	MyShaderProgram2.SetupFragmentShader("GLSL/yellowfrag.fs");
+	MyShaderProgram2.SetupFragmentShader("GLSL/WhiteFrag.fs");
 	MyShaderProgram2.SetupShaderProgram();
 
-	UMyObjectMesh *MyMesh2 = new UMyObjectMesh();
-	MyMesh2->CreateMeshSection(0, {
-		0.5f, -0.5f, 0.0f,
-		-0.5f, 0.5f, 0.0f,
-		-0.5f, -0.5f, 0.0f,
-	}, {
-		1.0f, 0.0f, 0.0f,
-		0.0f, 1.0f, 0.0f,
-		0.0f, 0.0f, 1.0f,
-	}, {},  {});
-	MyMesh2->GenRenderBuffer();
-	//MyMesh2->SetupShaderProgram(&MyShaderProgram2);
+	UMyObjectMesh *Light = new UMyObjectMesh();
+	Light->CreateMeshSection(0, {
+		-0.5f, -0.5f, -0.5f,
+		0.5f, -0.5f, -0.5f,
+		0.5f,  0.5f, -0.5f,
+		0.5f,  0.5f, -0.5f,
+		-0.5f,  0.5f, -0.5f,
+		-0.5f, -0.5f, -0.5f,
+
+		-0.5f, -0.5f,  0.5f,
+		0.5f, -0.5f,  0.5f,
+		0.5f,  0.5f,  0.5f,
+		0.5f,  0.5f,  0.5f,
+		-0.5f,  0.5f,  0.5f,
+		-0.5f, -0.5f,  0.5f,
+
+		-0.5f,  0.5f,  0.5f,
+		-0.5f,  0.5f, -0.5f,
+		-0.5f, -0.5f, -0.5f,
+		-0.5f, -0.5f, -0.5f,
+		-0.5f, -0.5f,  0.5f,
+		-0.5f,  0.5f,  0.5f,
+
+		0.5f,  0.5f,  0.5f,
+		0.5f,  0.5f, -0.5f,
+		0.5f, -0.5f, -0.5f,
+		0.5f, -0.5f, -0.5f,
+		0.5f, -0.5f,  0.5f,
+		0.5f,  0.5f,  0.5f,
+
+		-0.5f, -0.5f, -0.5f,
+		0.5f, -0.5f, -0.5f,
+		0.5f, -0.5f,  0.5f,
+		0.5f, -0.5f,  0.5f,
+		-0.5f, -0.5f,  0.5f,
+		-0.5f, -0.5f, -0.5f,
+
+		-0.5f,  0.5f, -0.5f,
+		0.5f,  0.5f, -0.5f,
+		0.5f,  0.5f,  0.5f,
+		0.5f,  0.5f,  0.5f,
+		-0.5f,  0.5f,  0.5f,
+		-0.5f,  0.5f, -0.5f,
+	}, {}, {}, {});
+	Light->GenRenderBuffer();
+	Light->SetupShaderProgram(&MyShaderProgram2);
 
 	MyEngine.RenderLoop();
 

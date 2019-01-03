@@ -132,24 +132,25 @@ void UMyObjectMesh::Render()
 	float Radius = 10.0f;
 	glm::mat4 ViewMat = glm::lookAt(glm::vec3(Radius*cos(glfwGetTime()), 0.0, Radius*sin(glfwGetTime())),
 		glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 1.0, 0.0));
-
+	UCamera& MyCamera = FMyOpenGLEngine::GetInstance()->MyCamera;
+	ViewMat = MyCamera.GetViewMat();
 
 	glm::mat4 ProjectionMat = glm::identity<glm::mat4>();
-	ProjectionMat = glm::perspective(glm::radians(45.0f), (float)FMyOpenGLEngine::windowWidth / FMyOpenGLEngine::windowHeight, 0.1f, 100.0f);
+	ProjectionMat = glm::perspective(glm::radians(MyCamera.GetZoomScale()), (float)FMyOpenGLEngine::windowWidth / FMyOpenGLEngine::windowHeight, 0.1f, 100.0f);
 
 	glm::vec3 cubePositions[] = {
 		glm::vec3(0.0f,  0.0f,  0.0f),
-		glm::vec3(2.0f,  5.0f, -15.0f),
-		glm::vec3(-1.5f, -2.2f, -2.5f),
-		glm::vec3(-3.8f, -2.0f, -12.3f),
-		glm::vec3(2.4f, -0.4f, -3.5f),
-		glm::vec3(-1.7f,  3.0f, -7.5f),
-		glm::vec3(1.3f, -2.0f, -2.5f),
-		glm::vec3(1.5f,  2.0f, -2.5f),
-		glm::vec3(1.5f,  0.2f, -1.5f),
-		glm::vec3(-1.3f,  1.0f, -1.5f)
+		//glm::vec3(2.0f,  5.0f, -15.0f),
+		//glm::vec3(-1.5f, -2.2f, -2.5f),
+		//glm::vec3(-3.8f, -2.0f, -12.3f),
+		//glm::vec3(2.4f, -0.4f, -3.5f),
+		//glm::vec3(-1.7f,  3.0f, -7.5f),
+		//glm::vec3(1.3f, -2.0f, -2.5f),
+		//glm::vec3(1.5f,  2.0f, -2.5f),
+		//glm::vec3(1.5f,  0.2f, -1.5f),
+		//glm::vec3(-1.3f,  1.0f, -1.5f)
 	};
-	for (unsigned int i = 0; i < 10; ++i)
+	for (unsigned int i = 0; i < sizeof(cubePositions) / sizeof(glm::vec3); ++i)
 	{
 		Transform2World = glm::identity<glm::mat4>();
 		Transform2World = glm::translate(Transform2World, cubePositions[i]);
