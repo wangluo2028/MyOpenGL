@@ -1,6 +1,6 @@
 #pragma once
 
-#include "MyObjectMesh.h"
+#include "LightMesh.h"
 
 class UMyWorld
 {
@@ -10,9 +10,15 @@ public:
 
 	void AddMesh(UMyObjectMesh *InMesh);
 
+	void AddLight(ULightMesh *InLight);
+
 	const std::vector<UMyObjectMesh*>& GetMeshesInWorld();
+
+	const std::vector<ULightMesh*>& GetLightsInWorld();
 
 protected:
 	std::vector<UMyObjectMesh*> MyObjectMeshes;
+
+	std::vector<ULightMesh*> LightMeshes;
 };
 

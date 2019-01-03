@@ -3,6 +3,7 @@
 
 
 UMaterial::UMaterial()
+	:ObjectColor(1.0f, 1.0f, 1.0f)
 {
 	vertexShader = 0;
 	fragmentShader = 0;
@@ -121,6 +122,16 @@ void UMaterial::SetTexture(size_t Index, UTexture2D *InTexture)
 	}
 	
 	Textures[Index] = InTexture;
+}
+
+void UMaterial::SetObjectColor(glm::vec3 InObjectColor)
+{
+	ObjectColor = InObjectColor;
+}
+
+const glm::vec3& UMaterial::GetObjectColor()
+{
+	return ObjectColor;
 }
 
 std::string UMaterial::ReadStringFromFile(const char *FilePath)

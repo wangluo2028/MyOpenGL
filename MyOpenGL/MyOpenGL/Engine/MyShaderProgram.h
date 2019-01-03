@@ -21,6 +21,10 @@ public:
 
 	void SetTexture(size_t Index, UTexture2D *InTexture);
 
+	void SetObjectColor(glm::vec3 InObjectColor);
+
+	const glm::vec3& GetObjectColor();
+
 protected:
 	std::string ReadStringFromFile(const char *FilePath);
 
@@ -32,5 +36,7 @@ protected:
 	unsigned int shaderProgram;
 
 	std::vector<UTexture2D*> Textures;
+
+	glm::vec3 ObjectColor;
 };
 

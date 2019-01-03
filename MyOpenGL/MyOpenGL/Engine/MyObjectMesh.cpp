@@ -138,47 +138,56 @@ void UMyObjectMesh::Render()
 	glm::mat4 ProjectionMat = glm::identity<glm::mat4>();
 	ProjectionMat = glm::perspective(glm::radians(MyCamera.GetZoomScale()), (float)FMyOpenGLEngine::windowWidth / FMyOpenGLEngine::windowHeight, 0.1f, 100.0f);
 
-	glm::vec3 cubePositions[] = {
-		glm::vec3(0.0f,  0.0f,  0.0f),
-		//glm::vec3(2.0f,  5.0f, -15.0f),
-		//glm::vec3(-1.5f, -2.2f, -2.5f),
-		//glm::vec3(-3.8f, -2.0f, -12.3f),
-		//glm::vec3(2.4f, -0.4f, -3.5f),
-		//glm::vec3(-1.7f,  3.0f, -7.5f),
-		//glm::vec3(1.3f, -2.0f, -2.5f),
-		//glm::vec3(1.5f,  2.0f, -2.5f),
-		//glm::vec3(1.5f,  0.2f, -1.5f),
-		//glm::vec3(-1.3f,  1.0f, -1.5f)
-	};
-	for (unsigned int i = 0; i < sizeof(cubePositions) / sizeof(glm::vec3); ++i)
+	glm::mat4 NewTransform = ProjectionMat * ViewMat * Transform2World;
+
+	glUniformMatrix4fv(glGetUniformLocation(MyShaderProgram->GetID(), "ObjectTransform"), 1, GL_FALSE, glm::value_ptr(NewTransform));
+	
+	const glm::vec3& ObjectColor = MyShaderProgram->GetObjectColor();
+	int VarLoc = glGetUniformLocation(MyShaderProgram->GetID(), "ObjectColor");
+	if (VarLoc >= 0)
 	{
-		Transform2World = glm::identity<glm::mat4>();
-		Transform2World = glm::translate(Transform2World, cubePositions[i]);
-		float RotationAngle = 20.0f * i;
-		Transform2World = glm::rotate(Transform2World, RotationAngle, glm::vec3(0.5f, 1.0f, 0.0f));
-		//Transform2World = glm::rotate(Transform2World, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.5f, 1.0f, 0.0f));
-		//Transform2World = glm::translate(Transform2World, glm::vec3(0.5f, -0.5f, 0.0f));
-		//Transform2World = glm::rotate(Transform2World, (float)glfwGetTime(), glm::vec3(0.0f, 0.0f, 1.0f));
-
-		Transform2World = ProjectionMat * ViewMat *Transform2World;
-
-		glUniformMatrix4fv(glGetUniformLocation(MyShaderProgram->GetID(), "ObjectTransform"), 1, GL_FALSE, glm::value_ptr(Transform2World));
-
-		if (ProcMeshSections.size() < 1)
+		glUniform3f(VarLoc, ObjectColor.x, ObjectColor.y, ObjectColor.z);
+	}
+	
+	VarLoc = glGetUniformLocation(MyShaderProgram->GetID(), "LightColor");
+	
+	glm::vec3 LightColor(1.0f, 1.0f, 1.0f);
+	if (!IsLight())
+	{
+		const std::vector<ULightMesh*>& Lights = FMyOpenGLEngine::GetInstance()->GetWorld()->GetLightsInWorld();
+		for (ULightMesh *LightMesh : Lights)
 		{
-			return;
-		}
-
-		FProcMeshSection& ProcMeshSection = ProcMeshSections[0];
-		if (ProcMeshSection.ProcIndexBuffer.empty())
-		{
-			glDrawArrays(GL_TRIANGLES, 0, (int)ProcMeshSection.ProcVertexBuffer.size());
-		}
-		else
-		{
-			glDrawElements(GL_TRIANGLES, (int)ProcMeshSection.ProcIndexBuffer.size(), GL_UNSIGNED_INT, 0);
+			const glm::vec3& SingleLightColor = LightMesh->MyShaderProgram->GetObjectColor();
+			LightColor = glm::vec3(LightColor.x*SingleLightColor.x, LightColor.y*SingleLightColor.y, LightColor.z*SingleLightColor.z);
 		}
 	}
+	if (VarLoc >= 0)
+	{
+		glUniform3f(VarLoc, LightColor.x, LightColor.y, LightColor.z);
+	}
+
+	if (ProcMeshSections.size() < 1)
+	{
+		return;
+	}
+
+	FProcMeshSection& ProcMeshSection = ProcMeshSections[0];
+	if (ProcMeshSection.ProcIndexBuffer.empty())
+	{
+		glDrawArrays(GL_TRIANGLES, 0, (int)ProcMeshSection.ProcVertexBuffer.size());
+	}
+	else
+	{
+		glDrawElements(GL_TRIANGLES, (int)ProcMeshSection.ProcIndexBuffer.size(), GL_UNSIGNED_INT, 0);
+	}
+}
+
+bool UMyObjectMesh::IsLight()
+{
+	const std::vector<ULightMesh*>& Lights = FMyOpenGLEngine::GetInstance()->GetWorld()->GetLightsInWorld();
+	auto IterFound = std::find(Lights.begin(), Lights.end(), this);
+	
+	return IterFound != Lights.end();
 }
 
 void UMyObjectMesh::BeginPlay()

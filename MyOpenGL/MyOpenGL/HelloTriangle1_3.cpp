@@ -31,10 +31,11 @@ int main()
 	// shader program
 	UMaterial MyShaderProgram;
 	MyShaderProgram.SetupVertexShader("GLSL/vertex.vs");
-	MyShaderProgram.SetupFragmentShader("GLSL/yellowfrag.fs");
+	MyShaderProgram.SetupFragmentShader("GLSL/frag.fs");
 	MyShaderProgram.SetupShaderProgram();
-	MyShaderProgram.SetTexture(0, &MyTextureWood);
-	MyShaderProgram.SetTexture(1, &MyTextureFace);
+	//MyShaderProgram.SetTexture(0, &MyTextureWood);
+	//MyShaderProgram.SetTexture(1, &MyTextureFace);
+	MyShaderProgram.SetObjectColor(glm::vec3(1.0f, 0.5f, 0.31f));
 
 	UMyObjectMesh *MyMesh1 = new UMyObjectMesh();
 	MyMesh1->CreateMeshSection(0, {
@@ -130,10 +131,11 @@ int main()
 	
 	UMaterial MyShaderProgram2;
 	MyShaderProgram2.SetupVertexShader("GLSL/vertex.vs");
-	MyShaderProgram2.SetupFragmentShader("GLSL/WhiteFrag.fs");
+	MyShaderProgram2.SetupFragmentShader("GLSL/frag.fs");
 	MyShaderProgram2.SetupShaderProgram();
+	MyShaderProgram2.SetObjectColor(glm::vec3(0.0f, 1.0f, 0.0f));
 
-	UMyObjectMesh *Light = new UMyObjectMesh();
+	ULightMesh *Light = new ULightMesh();
 	Light->CreateMeshSection(0, {
 		-0.5f, -0.5f, -0.5f,
 		0.5f, -0.5f, -0.5f,
@@ -179,6 +181,10 @@ int main()
 	}, {}, {}, {});
 	Light->GenRenderBuffer();
 	Light->SetupShaderProgram(&MyShaderProgram2);
+	glm::mat4 LightTrans = glm::mat4(1.0f);
+	LightTrans = glm::translate(LightTrans, glm::vec3(1.2f, 1.0f, 2.0f));
+	LightTrans = glm::scale(LightTrans, glm::vec3(0.2f));
+	Light->SetTransform(LightTrans);
 
 	MyEngine.RenderLoop();
 

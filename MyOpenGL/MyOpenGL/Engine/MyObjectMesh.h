@@ -21,6 +21,8 @@ public:
 
 	void Render();
 
+	bool IsLight();
+
 protected:
 	virtual void BeginPlay();
 
