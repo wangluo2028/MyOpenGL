@@ -1,0 +1,11 @@
+﻿  Lighting.cpp
+d:\opengl\test\myopengl\myopengl\lighting\lighting.cpp(173): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+d:\opengl\test\myopengl\myopengl\lighting\lighting.cpp(296): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+d:\opengl\test\myopengl\myopengl\lighting\lighting.cpp(297): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+d:\opengl\test\myopengl\myopengl\lighting\lighting.cpp(301): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+d:\opengl\test\myopengl\myopengl\lighting\lighting.cpp(302): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+d:\opengl\test\myopengl\myopengl\lighting\lighting.cpp(304): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+d:\opengl\test\myopengl\myopengl\lighting\lighting.cpp(305): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+d:\opengl\test\myopengl\myopengl\lighting\lighting.cpp(314): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+  Lighting.vcxproj -> D:\Opengl\Test\MyOpenGL\MyOpenGL\Debug\Lighting.exe
+  Lighting.vcxproj -> D:\Opengl\Test\MyOpenGL\MyOpenGL\Debug\Lighting.pdb (Full PDB)
